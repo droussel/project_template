@@ -3,8 +3,8 @@
 Read AGENTS.md, DESIGN.md, CONTRIBUTING.md, the feature spec when present,
 implemented user-facing behavior, and existing user docs. Ask which audience/task
 is intended if unclear. Do not document proposed behavior as shipped. Prefer the
-project's existing documentation location; `templates/user-docs/` contains optional
-starters, not a required site structure.
+project's existing documentation location. Do not create a documentation site or
+empty directory hierarchy merely because reusable starters exist.
 
 Create/update the smallest useful first-success, task, reference or recovery pages.
 Use real prerequisites, flags, expected outcomes, limitations and safe recovery;
