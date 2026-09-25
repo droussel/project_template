@@ -1,0 +1,22 @@
+# INACTIVE TEMPLATE. Adapt setup/pins/runner, then move to .github/workflows/verify.yml.
+# @@...@@ markers are manual editing placeholders, not GitHub expressions.
+name: Verify
+on:
+  push:
+  pull_request:
+permissions:
+  contents: read
+jobs:
+  verify:
+    runs-on: @@RUNNER_WITH_REQUIRED_PLATFORM@@
+    steps:
+      - name: Checkout
+        uses: actions/checkout@@APPROVED_ACTION_PIN_WITH_AT_SIGN@@
+      - name: Set up the documented toolchain and dependencies
+        run: |
+          @@EXPLICIT_REPRODUCIBLE_TOOLCHAIN_AND_DEPENDENCY_SETUP@@
+      - name: Run the repository completion gate
+        run: scripts/verify
+# Do not duplicate formatter/lint/test/coverage definitions here.
+# Add platform matrix/manual gates only for actual support requirements.
+# Deployment and provider-backed paid checks are separate explicit operations.

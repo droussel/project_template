@@ -1,0 +1,68 @@
+#!/usr/bin/env bash
+# Capture ONE non-interactive command without changing its success/failure meaning.
+# Do not use for a TUI or commands that emit secrets. Logs are local evidence.
+set -euo pipefail
+umask 077
+
+if [[ $# -lt 3 || "$2" != '--' ]]; then
+  printf 'Usage: scripts/capture <new-evidence-directory> -- <command> [arguments...]\n' >&2
+  exit 2
+fi
+OUTPUT="$1"
+shift 2
+
+if [[ -e "$OUTPUT" || -L "$OUTPUT" ]]; then
+  printf 'ERROR: evidence path already exists; choose a new attempt: %s\n' "$OUTPUT" >&2
+  exit 2
+fi
+mkdir -p -- "$(dirname "$OUTPUT")"
+mkdir -- "$OUTPUT"  # exclusive leaf creation: never overwrite a prior attempt
+OUTPUT="$(cd "$OUTPUT" && pwd)"
+
+{
+  printf 'Started UTC: %s\n' "$(date -u '+%Y-%m-%dT%H:%M:%SZ')"
+  printf 'Working directory: %s\n' "$PWD"
+  printf 'Command:'
+  printf ' %q' "$@"
+  printf '\n'
+  printf 'Git HEAD: '
+  git rev-parse HEAD 2>/dev/null || printf 'unavailable\n'
+  printf 'Git status at start (empty means clean):\n'
+  git status --porcelain=v1 2>/dev/null || printf 'unavailable\n'
+} > "$OUTPUT/metadata.txt"
+printf 'RUNNING; no completed exit status recorded yet.\n' > "$OUTPUT/status.txt"
+
+interrupted() {
+  local result="$1"
+  printf 'INTERRUPTED (signal exit %s); inspect output, do not infer completion.\n' "$result" > "$OUTPUT/status.txt"
+  exit "$result"
+}
+trap 'interrupted 130' INT
+trap 'interrupted 143' TERM
+trap 'interrupted 129' HUP
+
+printf 'Evidence: %s\n' "$OUTPUT"
+set +e
+"$@" 2>&1 | tee "$OUTPUT/output.log"
+results=("${PIPESTATUS[@]}")
+set -e
+command_result="${results[0]}"
+tee_result="${results[1]}"
+{
+  printf 'Ended UTC: %s\n' "$(date -u '+%Y-%m-%dT%H:%M:%SZ')"
+  printf 'Command exit: %s\n' "$command_result"
+  printf 'Output capture exit: %s\n' "$tee_result"
+  printf 'Git status at end:\n'
+  git status --porcelain=v1 2>/dev/null || printf 'unavailable\n'
+} >> "$OUTPUT/metadata.txt"
+
+if [[ "$command_result" -ne 0 ]]; then
+  printf 'FAILED: command exit %s\n' "$command_result" > "$OUTPUT/status.txt"
+  exit "$command_result"
+fi
+if [[ "$tee_result" -ne 0 ]]; then
+  printf 'INCOMPLETE: command passed but output capture failed (%s).\n' "$tee_result" > "$OUTPUT/status.txt"
+  exit "$tee_result"
+fi
+printf 'PASSED: command exit 0; capture exit 0.\n' > "$OUTPUT/status.txt"
+printf 'PASS: evidence saved to %s\n' "$OUTPUT"

@@ -1,0 +1,12 @@
+# Private local command evidence; never commit raw logs.
+.agent-runs/
+
+# Editor/OS and common local tool outputs. Adapt for the chosen stack.
+.DS_Store
+__pycache__/
+*.py[cod]
+.venv/
+node_modules/
+coverage/
+dist/
+build/

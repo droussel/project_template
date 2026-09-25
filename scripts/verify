@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+# Full deterministic completion gate. This is not a formatting/install command.
+set -euo pipefail
+ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+exec bash "$ROOT/scripts/validation.sh" verify "$@"
