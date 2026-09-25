@@ -4,13 +4,16 @@ This assignment can be read from the template repository when the operator suppl
 a GitHub URL. It is not a Pi subagent, installer, product specification or request to
 implement an application. The target project need not have Pi commands installed.
 
-When given a template URL, check the revision of any cached local clone against the
-remote default branch before trusting its README or role files. Fetch a current copy
-for inspection if it is behind; do not reset a dirty clone or the target project.
-If the remote is unavailable, disclose that the instructions may be stale and ask
-whether to proceed with the cached revision. Record which template commit was used
-in the completion report. A project already copied from an older template does not
-silently update itself; merge the new instructions deliberately.
+When given a template URL, use its current **remote HEAD** (default branch) unless
+the operator specifies a **tag**. A specified tag is the selected ref; do not
+replace it with HEAD. Before trusting any cached clone's README or role files,
+compare that clone to the selected remote ref and fetch the selected ref for
+inspection if needed. Never reset a dirty clone or the target project. If the
+remote ref cannot be checked, disclose the uncertainty and ask whether to proceed
+with the cached copy. Report the selected ref and the revision actually used for
+traceability; do not require the operator to supply a commit hash. A project
+already copied from older instructions needs a deliberate merge, not a silent
+update.
 
 ## Boundary and stopping point
 

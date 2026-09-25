@@ -11,20 +11,21 @@ launch agents, install dependencies, or make an unconfigured build green.
 Start Pi in the **target** directory and give it an ordinary message:
 
 > This is a new project. Use my project template at
-> https://github.com/droussel/project_template to bootstrap it. Read its README
-> and `.pi/agents/bootstrap.md`; inspect this target first,
+> https://github.com/droussel/project_template at the remote HEAD to bootstrap
+> it. Read its README and `.pi/agents/bootstrap.md`; inspect this target first,
 > then ask me one setup question at a time before making consequential choices.
 
 The one-sentence request with just the repository URL should also work: this README
-is the entry point when an agent inspects the template. **If it has a cached local
-clone, it must compare its commit with the URL's current default branch and fetch a
-fresh copy before using instructions from that clone.** It must not silently use a
-stale checkout or reset a modified local copy; if freshness cannot be checked, say
-so. The agent may fetch or clone the template for **inspection**, but must inspect
-downloaded commands before running them, avoid overwriting existing target files,
-and ask before installing packages or performing other unapproved side effects. You
-do not need `/bootstrap` in the target
-before starting. A local `/bootstrap` prompt is included for use **after** the
+is the entry point when an agent inspects the template. With no revision specified,
+use the **current remote HEAD** (default branch); alternatively the operator may
+specify a **tag**, which must be used as given rather than replaced by newer HEAD.
+If the agent has a cached clone, compare it to that selected remote ref and fetch
+that ref if needed before reading instructions. Never silently use a stale checkout
+or reset a modified local copy; if the ref cannot be checked, disclose that before
+proceeding. The agent may fetch or clone the template for **inspection**, but must
+inspect downloaded commands before running them, avoid overwriting existing target
+files, and ask before installing packages or performing other unapproved side
+effects. You do not need `/bootstrap` in the target before starting. A local `/bootstrap` prompt is included for use **after** the
 resources are available; it runs in the current session and is not an installer.
 
 The [bootstrap assignment](.pi/agents/bootstrap.md) contains a **fixed setup

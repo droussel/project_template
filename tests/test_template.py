@@ -51,14 +51,17 @@ class DistributionTests(unittest.TestCase):
         self.assertIn('not as a form to show the user', text)
         self.assertIn('**Do not write product source', text)
         self.assertIn('first-version gameplay/features', text)
-        self.assertIn('check the revision of any cached local clone', text)
+        self.assertIn('current **remote HEAD**', text)
+        self.assertIn('operator specifies a **tag**', text)
+        self.assertIn('compare that clone to the selected remote ref', text)
         self.assertIn('bootstrap complete; product\nimplementation not started', text)
         prompt = (ROOT / '.pi/prompts/bootstrap.md').read_text(encoding='utf-8')
         readme = (ROOT / 'README.md').read_text(encoding='utf-8')
         self.assertIn('one genuinely blocking **setup** question per message', prompt)
         self.assertIn('Once the foundation is reported, stop', prompt)
         self.assertIn('**It does not implement the application', readme)
-        self.assertIn('compare its commit with the URL', readme)
+        self.assertIn('current remote HEAD', readme)
+        self.assertIn('operator may\nspecify a **tag**', readme)
 
     def test_local_markdown_links_resolve(self):
         for path in ROOT.rglob('*.md'):
