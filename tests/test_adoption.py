@@ -130,6 +130,19 @@ class AdoptionGuardTests(unittest.TestCase):
         self.assertIn('broken local link', result.stderr)
         self.assertIn('missing role .pi/agents/designer.md', result.stderr)
 
+    def test_roles_must_not_depend_on_omitted_starters(self):
+        self.file('.pi/agents/scout.md',
+                  'Write reconnaissance.md using the corresponding template selectively.\n')
+        self.file('.pi/agents/technical-writer.md',
+                  'Use `templates/user-docs/` for optional starters.\n')
+        result = self.guard()
+        self.assertEqual(result.returncode, 1)
+        self.assertIn('absent starter templates/feature/reconnaissance.md', result.stderr)
+        self.assertIn('missing referenced user-doc starters', result.stderr)
+        self.file('templates/feature/reconnaissance.md', '# Reconnaissance\n')
+        (self.root / 'templates/user-docs').mkdir(parents=True)
+        self.assertEqual(self.guard().returncode, 0)
+
     def test_unwired_adoption_phase_fails(self):
         self.file('scripts/validation.sh', '#!/usr/bin/env bash\n# scripts/check-adoption.py\nexit 2\n')
         result = self.guard()

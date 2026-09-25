@@ -62,7 +62,8 @@ Keep this README in the template repository for subsequent bootstraps.
   read as documents for **this project**, not a kit: real name, mission, current
   status, supported platforms, toolchain and no fictional first success.
 - `.pi/` contains only useful project prompts/roles, with paths and command names
-  checked; kit `/bootstrap` is removed or rewritten for a real project need.
+  checked; roles do not depend on omitted starter files. Kit `/bootstrap` is
+  removed or rewritten for a real project need.
 - Distribution tests (`tests/test_template.py`, `tests/test_adoption.py`),
   `templates/project/`, inactive CI samples and wholesale optional libraries were
   not copied. At most three feature starters are retained for later use; the rest

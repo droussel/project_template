@@ -26,6 +26,12 @@ KIT_ONLY = (
     'templates/ci/verify.yml.template',
     'template-guide',
 )
+ROLE_STARTERS = {
+    'scout.md': 'templates/feature/reconnaissance.md',
+    'reviewer.md': 'templates/feature/review.md',
+    'implementer.md': 'templates/feature/implementation-notes.md',
+    'handoff.md': 'templates/feature/handoff.md',
+}
 FEATURE_STARTERS = (
     'templates/feature/README.md',
     'templates/feature/feature-spec.md',
@@ -159,6 +165,28 @@ def check(root: Path) -> list[str]:
             for role in re.findall(r'\.pi/agents/[a-zA-Z0-9_-]+\.md', text):
                 if not (root / role).is_file():
                     errors.append(f'{prompt.relative_to(root)}: missing role {role}')
+
+    roles = root / '.pi/agents'
+    if roles.is_dir():
+        for role in roles.glob('*.md'):
+            try:
+                text = role.read_text(encoding='utf-8')
+            except (OSError, UnicodeError) as exc:
+                errors.append(f'{role.relative_to(root)}: cannot read UTF-8 text: {exc}')
+                continue
+            normalized = ' '.join(text.split())
+            for starter in re.findall(r'templates/(?:feature|user-docs|decisions)/[\w.-]+\.md', text):
+                if not (root / starter).is_file():
+                    errors.append(f'{role.relative_to(root)}: missing referenced starter {starter}')
+            if 'templates/user-docs/' in text and not (root / 'templates/user-docs').is_dir():
+                errors.append(f'{role.relative_to(root)}: missing referenced user-doc starters')
+            starter = ROLE_STARTERS.get(role.name)
+            if starter and not (root / starter).is_file() and any(
+                phrase in normalized for phrase in ('the corresponding template selectively',
+                                                     'the template selectively',
+                                                     'select from the template')
+            ):
+                errors.append(f'{role.relative_to(root)}: refers to absent starter {starter}')
 
     for name in KIT_ONLY:
         if (root / name).exists():
