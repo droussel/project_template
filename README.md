@@ -10,8 +10,9 @@ launch agents, install dependencies, or make an unconfigured build green.
 
 Start Pi in the **target** directory and give it an ordinary message:
 
-> This is a new project. Use my project template at <repository URL> to bootstrap
-> it. Read its README and `.pi/agents/bootstrap.md`; inspect this target first,
+> This is a new project. Use my project template at
+> https://github.com/droussel/project_template to bootstrap it. Read its README
+> and `.pi/agents/bootstrap.md`; inspect this target first,
 > then ask me one setup question at a time before making consequential choices.
 
 The one-sentence request with just the repository URL should also work: this README
