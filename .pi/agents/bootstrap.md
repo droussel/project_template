@@ -105,7 +105,7 @@ itself: reconcile each claim with the real worktree before completing the record
 | .pi/prompts/ and .pi/agents/ | Select the later-work workflow the project will use; adapt project-specific instructions and path references. Omit the kit's `/bootstrap` prompt and bootstrap role by default. If retaining them for a real need, rewrite both to serve this project, not to adopt a remote kit. |
 | scripts/ | Keep check, verify, validation.sh, the relevant source-size guard and check-adoption.py. Adapt native checks honestly; retain capture only if useful. Add `python3 scripts/check-adoption.py` as a shared phase of adopted check/verify once the authorities pass it. |
 | .gitignore and .editorconfig | Merge with existing conventions; ignore project build outputs and private local evidence. Inspect generated .pi files before staging. |
-| tests/ and templates/ | Do **not** copy `tests/test_template.py` or `tests/test_adoption.py` (distribution QA), `templates/project/`, the inactive CI sample, or the whole optional library. Keep selected helpers/starter artifacts only with an actual project use, adapting tests that assume unchanged kit scripts. |
+| tests/ and templates/ | Do **not** copy `tests/test_template.py` or `tests/test_adoption.py` (distribution QA), `templates/project/`, the inactive CI sample, or the whole optional library. Keep at most three feature starters (if any), selected for the actual workflow; create other artifacts when needed. Adapt retained tests that assume unchanged kit scripts. |
 
 Do not fill product sections with guesses to eliminate placeholders: remove
 inapplicable sections or mark real open decisions as deferred to first design.

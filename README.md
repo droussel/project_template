@@ -65,8 +65,9 @@ Keep this README in the template repository for subsequent bootstraps.
   checked; kit `/bootstrap` is removed or rewritten for a real project need.
 - Distribution tests (`tests/test_template.py`, `tests/test_adoption.py`),
   `templates/project/`, inactive CI samples and wholesale optional libraries were
-  not copied. Local/generated .pi files and private evidence are not accidentally
-  staged.
+  not copied. At most three feature starters are retained for later use; the rest
+  can be selected when needed. Local/generated .pi files and private evidence are
+  not accidentally staged.
 - `docs/bootstrap.md` contains B1–B6 checked **only when completed**, each with
   concrete evidence. Unchecked or missing items block completion. Use the
   [record starter](templates/project/bootstrap-record.md) to create it, not as a

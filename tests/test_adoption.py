@@ -112,6 +112,16 @@ class AdoptionGuardTests(unittest.TestCase):
         (self.root / names[-1]).unlink()
         self.assertEqual(self.guard().returncode, 0)
 
+    def test_nearly_whole_feature_library_without_readme_still_fails(self):
+        names = ('feature-spec.md', 'architecture.md', 'reconnaissance.md',
+                 'implementation-notes.md', 'review.md', 'handoff.md')
+        for name in names:
+            self.file(f'templates/feature/{name}', '# reusable starter\n')
+        self.assertIn('6 dormant starters', self.guard().stderr)
+        for name in names[3:]:
+            (self.root / 'templates/feature' / name).unlink()
+        self.assertEqual(self.guard().returncode, 0)
+
     def test_broken_authority_links_and_prompt_roles_fail(self):
         self.file('README.md', '# Jumping Potato\n\n[Guide](docs/user/start.md)\n')
         self.file('.pi/prompts/design.md', 'Read `.pi/agents/designer.md` first.\n')

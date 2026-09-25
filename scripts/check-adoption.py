@@ -26,6 +26,16 @@ KIT_ONLY = (
     'templates/ci/verify.yml.template',
     'template-guide',
 )
+FEATURE_STARTERS = (
+    'templates/feature/README.md',
+    'templates/feature/feature-spec.md',
+    'templates/feature/architecture.md',
+    'templates/feature/reconnaissance.md',
+    'templates/feature/implementation-notes.md',
+    'templates/feature/review.md',
+    'templates/feature/handoff.md',
+    'templates/feature/sessions.md',
+)
 WHOLESALE_SETS = (
     ('feature artifacts', ('templates/feature/README.md',
                            'templates/feature/feature-spec.md',
@@ -153,6 +163,9 @@ def check(root: Path) -> list[str]:
     for name in KIT_ONLY:
         if (root / name).exists():
             errors.append(f'{name}: kit-only material copied into the project')
+    feature_count = sum((root / name).is_file() for name in FEATURE_STARTERS)
+    if feature_count > 3:
+        errors.append(f'templates/feature/: {feature_count} dormant starters; keep at most 3')
     for label, names in WHOLESALE_SETS:
         if all((root / name).is_file() for name in names):
             errors.append(f'templates/: wholesale {label}; select only needed starters')
