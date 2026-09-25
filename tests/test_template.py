@@ -54,13 +54,16 @@ class DistributionTests(unittest.TestCase):
         self.assertIn('current **remote HEAD**', text)
         self.assertIn('operator specifies a **tag**', text)
         self.assertIn('compare that clone to the selected remote ref', text)
-        self.assertIn('bootstrap complete; product\nimplementation not started', text)
+        self.assertIn('bootstrap complete; product implementation not started', text)
+        self.assertIn('Do **not** copy `tests/test_template.py`', text)
+        self.assertIn('python3 scripts/check-adoption.py', text)
         prompt = (ROOT / '.pi/prompts/bootstrap.md').read_text(encoding='utf-8')
         readme = (ROOT / 'README.md').read_text(encoding='utf-8')
         self.assertIn('one genuinely blocking **setup** question per message', prompt)
-        self.assertIn('Once the foundation is reported, stop', prompt)
+        self.assertIn('Once the\nfoundation is reported, stop', prompt)
         self.assertIn('**It does not implement the application', readme)
         self.assertIn('current remote HEAD', readme)
+        self.assertIn('check-adoption.py', readme)
         self.assertIn('operator may\nspecify a **tag**', readme)
 
     def test_local_markdown_links_resolve(self):

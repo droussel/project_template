@@ -25,8 +25,9 @@ or reset a modified local copy; if the ref cannot be checked, disclose that befo
 proceeding. The agent may fetch or clone the template for **inspection**, but must
 inspect downloaded commands before running them, avoid overwriting existing target
 files, and ask before installing packages or performing other unapproved side
-effects. You do not need `/bootstrap` in the target before starting. A local `/bootstrap` prompt is included for use **after** the
-resources are available; it runs in the current session and is not an installer.
+effects. You do not need `/bootstrap` in the target before starting. A local
+`/bootstrap` prompt is included for use **after** the resources are available; it
+runs in the current session and is not an installer.
 
 The [bootstrap assignment](.pi/agents/bootstrap.md) contains a **fixed setup
 checklist** marked Required, Conditional or Optional. It is **for the agent, not a
@@ -35,10 +36,12 @@ question per message, skips facts already known and applies safe defaults. It do
 not ask for first-version features, gameplay rules, persistence or distribution of
 an unbuilt app. Those are questions for a separate design/implementation assignment.
 
-Bootstrap sets up project instructions, Pi prompts, toolchain choices and honest
-validation entry points. **It does not implement the application, its UI, game loop,
-product tests or a demo to make checks green.** After reporting the setup result it
-stops; `/design` or `/implement` requires a new explicit request. Supplied defaults
+Bootstrap sets up **project-specific** instructions, Pi prompts, toolchain choices
+and honest validation entry points. It rewrites the five authorities and .pi/README.md
+for the actual project, selects only useful resources, and omits kit-only tests and
+templates. **It does not implement the application, its UI, game loop, product tests
+or a demo to make checks green.** After reporting the setup result it stops;
+`/design` or `/implement` requires a new explicit request. Supplied defaults
 remain **300/500 physical source lines**, **80% ordinary / 90% critical per-layer
 coverage**, meaningful regressions, fast `check` and full `verify`, risk-based
 independent review, no automatic delegation and no commit/push without authorization.
@@ -54,12 +57,18 @@ Keep this README in the template repository for subsequent bootstraps.
 
 ### Bootstrap completion checklist
 
-- The target's name, broad mission, supported platforms, chosen toolchain and README
-  status reflect real facts, not invented features or a fictitious playable quick start.
-- `AGENTS.md`, `ARCHITECTURE.md`, `CONTRIBUTING.md` and `DESIGN.md` agree with actual
-  code and the selected stack; incompatible pre-existing instructions were resolved.
-- `.pi/` contains only appropriate local prompts/roles, with paths and command names
-  checked against existing Pi resources.
+- README.md, AGENTS.md, ARCHITECTURE.md, CONTRIBUTING.md, DESIGN.md and .pi/README.md
+  read as documents for **this project**, not a kit: real name, mission, current
+  status, supported platforms, toolchain and no fictional first success.
+- `.pi/` contains only useful project prompts/roles, with paths and command names
+  checked; kit `/bootstrap` is removed or rewritten for a real project need.
+- Distribution tests (`tests/test_template.py`, `tests/test_adoption.py`),
+  `templates/project/`, inactive CI samples and wholesale optional libraries were
+  not copied. Local/generated .pi files and private evidence are not accidentally
+  staged.
+- `python3 scripts/check-adoption.py` **passes in the target** after a manual
+  file-by-file authority review, and the adopted check/verify wrappers call it as a
+  shared phase. This guard intentionally fails on the kit itself.
 - Checks for existing code/tooling are real and detect errors. Product-dependent
   phases not yet possible are named, remain nonzero/unconfigured, and identify what
   the first feature must wire before claiming product verification.
@@ -78,7 +87,7 @@ Keep this README in the template repository for subsequent bootstraps.
 | [.pi/](.pi/README.md) | Pi prompt entry points and role instructions; not automatic subagents. |
 | [templates/feature/](templates/feature/README.md) | Optional specification, reconnaissance, plan, review and handoff starters. |
 | [templates/user-docs/](templates/user-docs/README.md) | Optional task-oriented public documentation starters. |
-| [scripts/](scripts/validation.sh) | Shared check/verify dispatch, source-size guard and evidence capture. |
+| [scripts/](scripts/validation.sh) | Shared check/verify dispatch, adoption/source-size guards and evidence capture. |
 
 These are **templates** until adapted. Delete inapplicable sections rather than
 inventing services or token systems. A proposed feature plan does not become current
@@ -131,7 +140,8 @@ not independent review. The operator owns approval and acceptance.
 ```sh
 scripts/check    # fast feedback; lists omitted full phases once adapted
 scripts/verify   # full deterministic completion gate
-python3 -m unittest discover -s tests -p 'test_*.py'  # kit tests, not product tests
+python3 scripts/check-adoption.py  # run in an adapted target; fails on this kit
+python3 -m unittest discover -s tests -p 'test_*.py'  # kit tests; do not copy wholesale
 ```
 
 Both wrappers use `scripts/validation.sh`. **As shipped, they deliberately return

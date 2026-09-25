@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 # ADAPT THIS FILE during project bootstrap. Do not turn placeholders into no-ops.
+# In the adopted project, add python3 scripts/check-adoption.py as a shared phase
+# after rewriting project authorities; do not claim its PASS for the kit itself.
 # Requires Bash 3.2+, Git, and Python 3.9+ for the portable source-size guard.
 set -Eeuo pipefail
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"

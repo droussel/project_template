@@ -78,18 +78,30 @@ choice until it is actually needed for tooling or the first feature.
 ## Adapt the foundation
 
 Once the blocking setup fields are resolved, give a short setup plan: intended
-stack and why, existing paths to preserve, authority/Pi resources to adapt, default
-policies and exceptions, which checks can actually work now, and which wait for
-product code. Settle any material toolchain/overwrite choice before editing.
+stack and why, existing paths to preserve, a **specific keep/adapt/omit file list**,
+policy exceptions, checks possible now, and checks waiting for product code. Settle
+any material toolchain/overwrite choice before editing. Do not bulk-copy the kit
+and call that adoption. If copied for convenience, remove only the kit-only files
+you just introduced; preserve anything previously present in the target.
 
-Adapt AGENTS.md (mission and scope), ARCHITECTURE.md (state what exists; a code-free
-project has no product architecture yet), CONTRIBUTING.md (tools and policies),
-DESIGN.md (broad user context, not an invented workflow), and the downstream README
-(status: scaffold, with development/setup steps, not an untested playable quick
-start). Copy/adapt .pi/prompts/ and .pi/agents/ for later work; add .gitignore and
-.editorconfig without clobbering existing conventions. Keep only useful optional
-artifacts. Do not fill product sections with guesses to eliminate placeholders:
-remove inapplicable sections or mark real open decisions as deferred to first design.
+| Project file | Required outcome at the end of bootstrap |
+|---|---|
+| README.md | Write for the actual project: name, purpose, scaffold status, supported environments and honest development commands. No kit orientation or fictional playable quick start. |
+| AGENTS.md | Give agents the actual project mission, current non-goals and relevant policy map. Remove all template comments/placeholders and adapt generic instructions to this project. |
+| ARCHITECTURE.md | Describe only current components (or explicitly none), dependencies, state authority and real checks. No fabricated product architecture. |
+| CONTRIBUTING.md | State the chosen toolchain/platforms and actual commands versus pending gates; retain quality defaults and later coverage classification. |
+| DESIGN.md | Record known user/surface context and interaction guidance; defer unchosen product details rather than inventing them. |
+| .pi/README.md | Rewrite as guidance for **this project's** available commands and roles; no “this kit”, URL bootstrap instructions or other template-maintenance prose. |
+| .pi/prompts/ and .pi/agents/ | Select the later-work workflow the project will use; adapt project-specific instructions and path references. Omit the kit's `/bootstrap` prompt and bootstrap role by default. If retaining them for a real need, rewrite both to serve this project, not to adopt a remote kit. |
+| scripts/ | Keep check, verify, validation.sh, the relevant source-size guard and check-adoption.py. Adapt native checks honestly; retain capture only if useful. Add `python3 scripts/check-adoption.py` as a shared phase of adopted check/verify once the authorities pass it. |
+| .gitignore and .editorconfig | Merge with existing conventions; ignore project build outputs and private local evidence. Inspect generated .pi files before staging. |
+| tests/ and templates/ | Do **not** copy `tests/test_template.py` or `tests/test_adoption.py` (distribution QA), `templates/project/`, the inactive CI sample, or the whole optional library. Keep selected helpers/starter artifacts only with an actual project use, adapting tests that assume unchanged kit scripts. |
+
+Do not fill product sections with guesses to eliminate placeholders: remove
+inapplicable sections or mark real open decisions as deferred to first design.
+Review every authority and the Pi guide *as a downstream user would*, checking
+that all paths, commands, status and implied capabilities match the target. A green
+structural check cannot judge whether the prose is genuinely project-specific.
 
 Wire real native formatter, lint/types, tests, coverage, build, architecture and
 docs phases only where applicable to existing code and tooling. Source-size checks
@@ -106,11 +118,17 @@ Preserve pre-existing target work and keep raw logs/secrets out of commits.
 
 ## Stop and report
 
-Run the checks that can genuinely run; exercise an intentional failure of any newly
-configured gate where safe, restoring the fixture afterwards. Report the template
-revision, changed files, exact commands/outcomes, candidate worktree state, policy
-exceptions, product phases not yet configured, and the explicit handoff:
-**bootstrap complete; product
-implementation not started** (or clearly state what blocks even the foundation).
+First run `python3 scripts/check-adoption.py` in the target; it **must pass**. Do
+not delete, bypass or weaken the guard to achieve this. Then run checks that can
+genuinely run; exercise an intentional failure of any newly configured gate where
+safe, restoring the fixture afterwards. Inspect the final target file list and
+search project authorities and Pi docs for `{{...}}`, kit-specific wording and
+stale links. Report for **each authority and .pi/README.md** the project-specific
+facts it now owns, plus the omitted kit-only files and optional content retained
+with a reason. Report the selected template ref/revision, exact check commands and
+outcomes (distinguish adoption PASS from product verify exit 2), worktree state,
+policy exceptions, product phases still pending, and the explicit handoff:
+**bootstrap complete; product implementation not started** (or state what blocks
+even the foundation).
 Do not proceed to `/design` or `/implement` unless the operator separately requests
 it. Do not call an unconfigured scripts/check or scripts/verify a product pass.
