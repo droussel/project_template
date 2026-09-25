@@ -11,7 +11,9 @@ Out of scope: {{EXPLICIT_NON_GOALS}}
 
 Until these sections and validation commands are configured, this repository is a
 template, not evidence of an implemented product. Template adoption is a legitimate
-first task; do not create fictional architecture to fill blanks.
+first task; do not create fictional architecture to fill blanks. If the current
+assignment is bootstrap, follow `.pi/agents/bootstrap.md`: set up the foundation
+only. A product description is not permission to implement its first feature.
 
 ## Read the relevant authority
 
@@ -86,10 +88,12 @@ specific evidence, not entire transcripts or duplicated repository exploration.
 `scripts/check` is fast feedback. `scripts/verify` is the authoritative deterministic
 completion gate. Their phase definitions belong in one shared implementation.
 
-During development, run focused tests. Before claiming substantial work complete,
+During development, run focused tests. Before claiming substantial product work complete,
 run full verification, inspect the complete diff, evaluate required review findings,
 update relevant durable/user documentation, and record any manual evidence still
-needed. After changes, rerun checks whose evidence is no longer valid.
+needed. After changes, rerun checks whose evidence is no longer valid. A code-free
+bootstrap may finish with product phases still unconfigured, but must report them
+as pending and must not claim product verification passed.
 
 Every reasonably testable defect needs a meaningful regression. Coverage floors,
 file-size limits, formatter/linter configuration, and risk-based review rules live in

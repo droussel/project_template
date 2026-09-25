@@ -38,23 +38,25 @@ class DistributionTests(unittest.TestCase):
                 self.assertIn(f'.pi/agents/{role}.md', body)
                 self.assertTrue((ROOT / '.pi/agents' / f'{role}.md').is_file())
 
-    def test_bootstrap_question_contract(self):
+    def test_bootstrap_setup_only_contract(self):
         text = (ROOT / '.pi/agents/bootstrap.md').read_text(encoding='utf-8')
         rows = re.findall(r'^\| (\d+) \| ([^|]+) \|', text, re.M)
-        self.assertEqual([int(number) for number, _ in rows], list(range(1, 27)))
+        self.assertEqual([int(number) for number, _ in rows], list(range(1, 12)))
         self.assertTrue(all(label.strip() in ('**Required**', 'Optional')
                             or label.strip().startswith('**Conditional:')
                             for _, label in rows))
-        self.assertIn('300-line warning / 500-line ceiling', text)
-        self.assertIn('80% ordinary / 90% critical', text)
-        self.assertIn('Ask exactly one question per message', text)
-        self.assertIn('Never paste the catalogue', text)
-        self.assertIn('not that it must become\nits own question', text)
-        self.assertIn('Do not ask for blanket acceptance of quality defaults', text)
+        self.assertIn('300/500', text)
+        self.assertIn('80%/90%', text)
+        self.assertIn('**exactly one genuinely blocking setup question per message**', text)
+        self.assertIn('not as a form to show the user', text)
+        self.assertIn('**Do not write product source', text)
+        self.assertIn('first-version gameplay/features', text)
+        self.assertIn('bootstrap complete; product\nimplementation not started', text)
         prompt = (ROOT / '.pi/prompts/bootstrap.md').read_text(encoding='utf-8')
         readme = (ROOT / 'README.md').read_text(encoding='utf-8')
-        self.assertIn('exactly\none relevant question per message', prompt)
-        self.assertIn('agent, not a questionnaire to dump into chat', readme)
+        self.assertIn('one genuinely blocking **setup** question per message', prompt)
+        self.assertIn('Once the foundation is reported, stop', prompt)
+        self.assertIn('**It does not implement the application', readme)
 
     def test_local_markdown_links_resolve(self):
         for path in ROOT.rglob('*.md'):

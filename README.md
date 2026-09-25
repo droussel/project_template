@@ -22,23 +22,23 @@ performing other unapproved side effects. You do not need `/bootstrap` in the ta
 before starting. A local `/bootstrap` prompt is included for use **after** the
 resources are available; it runs in the current session and is not an installer.
 
-The [bootstrap assignment](.pi/agents/bootstrap.md) contains a **fixed, numbered
-26-item checklist**, each marked Required, Conditional or Optional. It is **for the
-agent, not a questionnaire to dump into chat**: the agent asks exactly one relevant
-question per message, waits for your answer, and updates all checklist entries your
-answer resolves. It skips facts already known, inapplicable questions, and optional
-choices covered by defaults. Required means resolved before claiming completion,
-not necessarily asked aloud. Material unknowns remain visible blockers rather than
-invented facts. You can volunteer other preferences at any time.
+The [bootstrap assignment](.pi/agents/bootstrap.md) contains a **fixed setup
+checklist** marked Required, Conditional or Optional. It is **for the agent, not a
+questionnaire to dump into chat**: the agent asks only one genuinely blocking setup
+question per message, skips facts already known and applies safe defaults. It does
+not ask for first-version features, gameplay rules, persistence or distribution of
+an unbuilt app. Those are questions for a separate design/implementation assignment.
 
-The agent then summarizes the proposed product/stack, files to preserve or create,
-policy exceptions and validation plan; settles material choices; adapts the project;
-runs checks; and reports exact results and limitations. The supplied defaults remain
-**300/500 physical source lines**, **80% ordinary / 90% critical per-layer coverage**,
-meaningful regressions, a fast `check` and full `verify`, risk-based independent
-review, no automatic delegation, and no commit/push without authorization. You may
-explicitly change individual defaults during bootstrap; the agent must not silently
-relax them. No production code means coverage is not yet applicable, not “100%”.
+Bootstrap sets up project instructions, Pi prompts, toolchain choices and honest
+validation entry points. **It does not implement the application, its UI, game loop,
+product tests or a demo to make checks green.** After reporting the setup result it
+stops; `/design` or `/implement` requires a new explicit request. Supplied defaults
+remain **300/500 physical source lines**, **80% ordinary / 90% critical per-layer
+coverage**, meaningful regressions, fast `check` and full `verify`, risk-based
+independent review, no automatic delegation and no commit/push without authorization.
+The operator can explicitly change individual policies; the agent must not silently
+relax them. With no product code, coverage is not applicable *yet*, not “100%”.
+Unconfigured product checks must remain visibly nonzero until they can be real.
 
 For an existing project, merge deliberately with its authorities, Pi resources,
 scripts and CI; do not copy over them. Use only optional content that helps its
@@ -48,17 +48,18 @@ Keep this README in the template repository for subsequent bootstraps.
 
 ### Bootstrap completion checklist
 
-- The target's mission, scope, supported platforms and first-success instructions
-  reflect real operator answers, not `{{...}}` placeholders or invented architecture.
+- The target's name, broad mission, supported platforms, chosen toolchain and README
+  status reflect real facts, not invented features or a fictitious playable quick start.
 - `AGENTS.md`, `ARCHITECTURE.md`, `CONTRIBUTING.md` and `DESIGN.md` agree with actual
   code and the selected stack; incompatible pre-existing instructions were resolved.
 - `.pi/` contains only appropriate local prompts/roles, with paths and command names
   checked against existing Pi resources.
-- Real formatter, static analysis, tests, coverage (where code exists), build,
-  architecture and relevant docs phases are configured in the native tooling and
-  exposed by `scripts/check` and `scripts/verify`; intentional failures are detected.
-- The agent reports actual commands/results and unrun manual, provider, platform or
-  CI checks. A pending decision or exit 2 is not a successful completed bootstrap.
+- Checks for existing code/tooling are real and detect errors. Product-dependent
+  phases not yet possible are named, remain nonzero/unconfigured, and identify what
+  the first feature must wire before claiming product verification.
+- The agent reports exact commands/results and outstanding decisions or checks, then
+  stops. A scaffold can be bootstrapped without being a verified product; exit 2 is
+  **not** a passing `scripts/verify`.
 
 ## Authorities and included files
 

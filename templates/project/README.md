@@ -4,6 +4,10 @@
 
 Status: {{ACTUAL_MATURITY_AND_MATERIAL_LIMITATIONS}}
 
+<!-- Bootstrap-only project: state that no product exists yet. Replace the first-use
+section below with a short development/setup section until real first-use commands
+can be tested. Never publish a fictional working quick start. -->
+
 ## First success
 
 Prerequisites: {{SUPPORTED_ENVIRONMENT_AND_REQUIRED_TOOLS}}
