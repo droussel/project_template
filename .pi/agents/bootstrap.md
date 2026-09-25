@@ -84,6 +84,16 @@ any material toolchain/overwrite choice before editing. Do not bulk-copy the kit
 and call that adoption. If copied for convenience, remove only the kit-only files
 you just introduced; preserve anything previously present in the target.
 
+Create `docs/bootstrap.md` from `templates/project/bootstrap-record.md`. This is a
+small **project-specific completion record** required by the deterministic guard.
+Record the selected remote HEAD or tag and its resolved revision. Work through B1–B6
+in order: inspect, decide setup, adapt authorities, curate resources, validate,
+review and stop. Mark a task `[x]` **only after doing it** and replace its evidence
+marker with actual paths/commands/outcomes. Leave blocked items `[ ]` with a reason;
+do not call bootstrap complete. Do not ask the operator to answer this checklist or
+create a project-management system around it. A task's checkmark is not proof by
+itself: reconcile each claim with the real worktree before completing the record.
+
 | Project file | Required outcome at the end of bootstrap |
 |---|---|
 | README.md | Write for the actual project: name, purpose, scaffold status, supported environments and honest development commands. No kit orientation or fictional playable quick start. |
@@ -118,17 +128,19 @@ Preserve pre-existing target work and keep raw logs/secrets out of commits.
 
 ## Stop and report
 
-First run `python3 scripts/check-adoption.py` in the target; it **must pass**. Do
-not delete, bypass or weaken the guard to achieve this. Then run checks that can
-genuinely run; exercise an intentional failure of any newly configured gate where
-safe, restoring the fixture afterwards. Inspect the final target file list and
-search project authorities and Pi docs for `{{...}}`, kit-specific wording and
-stale links. Report for **each authority and .pi/README.md** the project-specific
-facts it now owns, plus the omitted kit-only files and optional content retained
-with a reason. Report the selected template ref/revision, exact check commands and
-outcomes (distinguish adoption PASS from product verify exit 2), worktree state,
-policy exceptions, product phases still pending, and the explicit handoff:
-**bootstrap complete; product implementation not started** (or state what blocks
-even the foundation).
+Run checks that can genuinely run; exercise an intentional failure of any newly
+configured gate where safe, restoring the fixture afterwards. Inspect the final
+target file list and search authorities/Pi docs for `{{...}}`, kit wording and stale
+links. Complete B1–B6 in `docs/bootstrap.md` with concrete evidence (pending product
+checks must be described honestly); then run `python3 scripts/check-adoption.py` in
+the target. It **must pass** before claiming bootstrap complete. If it fails, fix
+the underlying work, update invalid evidence and rerun; do not delete, bypass or
+weaken the guard. Report the checked task list and for **each authority and
+.pi/README.md** the facts it now owns, plus omitted kit-only files and optional
+content retained with a reason. Report the selected template ref/revision, exact
+check commands and outcomes (distinguish adoption PASS from product verify exit 2),
+worktree state, policy exceptions, product phases still pending, and the explicit
+handoff: **bootstrap complete; product implementation not started** (or state what
+blocks even the foundation).
 Do not proceed to `/design` or `/implement` unless the operator separately requests
 it. Do not call an unconfigured scripts/check or scripts/verify a product pass.

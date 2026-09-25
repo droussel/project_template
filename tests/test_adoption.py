@@ -2,6 +2,7 @@
 """Regression tests for the downstream adoption guard, not product behavior."""
 from __future__ import annotations
 
+import re
 import subprocess
 import sys
 import tempfile
@@ -25,6 +26,13 @@ class AdoptionGuardTests(unittest.TestCase):
             self.file(name, '#!/usr/bin/env bash\nexit 2\n')
         self.file('scripts/validation.sh',
                   '#!/usr/bin/env bash\npython3 scripts/check-adoption.py\nexit 2\n')
+        record = (KIT / 'templates/project/bootstrap-record.md').read_text(encoding='utf-8')
+        record = re.sub(r'<!--.*?-->', '', record, flags=re.S)
+        record = record.replace('{{PROJECT_NAME}}', 'Jumping Potato')
+        record = record.replace('{{REMOTE_HEAD_OR_SELECTED_TAG}}', 'remote HEAD')
+        record = record.replace('{{ACTUAL_RESOLVED_REVISION}}', 'deadbeef')
+        record = re.sub(r'\{\{[^{}]+\}\}', 'Reviewed paths and command outcomes.', record)
+        self.file('docs/bootstrap.md', record.replace('- [ ]', '- [x]'))
 
     def file(self, name, text):
         path = self.root / name
@@ -39,6 +47,37 @@ class AdoptionGuardTests(unittest.TestCase):
         result = self.guard()
         self.assertEqual(result.returncode, 0, result.stderr)
         self.assertIn('structure: PASS', result.stdout)
+
+    def test_missing_or_unchecked_bootstrap_tasks_fail(self):
+        record = (self.root / 'docs/bootstrap.md').read_text(encoding='utf-8')
+        self.file('docs/bootstrap.md', record.replace('- [x] B3', '- [ ] B3'))
+        self.assertIn('unchecked task B3', self.guard().stderr)
+        (self.root / 'docs/bootstrap.md').unlink()
+        self.assertIn('missing bootstrap completion record', self.guard().stderr)
+
+    def test_missing_or_rewritten_task_fails(self):
+        record = (self.root / 'docs/bootstrap.md').read_text(encoding='utf-8')
+        lines = [line for line in record.splitlines()
+                 if not line.startswith('- [x] B2 ')]
+        self.file('docs/bootstrap.md', '\n'.join(lines).replace(
+            'B3 Adapt all project authorities', 'B3 Skip adapting project authorities') + '\n')
+        result = self.guard()
+        self.assertEqual(result.returncode, 1)
+        self.assertIn('missing task B2', result.stderr)
+        self.assertIn('changed task description B3', result.stderr)
+
+    def test_fabricated_or_incomplete_checklist_fails(self):
+        record = (self.root / 'docs/bootstrap.md').read_text(encoding='utf-8')
+        self.file('docs/bootstrap.md', record.replace('Template revision used: deadbeef',
+                                                     'Template revision used: {{COMMIT}}')
+                  .replace('— Evidence: Reviewed paths and command outcomes.',
+                           '— Evidence: done', 1)
+                  + '\n- [ ] Extra task\n')
+        result = self.guard()
+        self.assertEqual(result.returncode, 1)
+        for message in ('unfilled starter content', 'missing resolved template revision',
+                        'missing concrete evidence', 'malformed checklist item'):
+            self.assertIn(message, result.stderr)
 
     def test_unfilled_authorities_and_kit_readmes_fail(self):
         self.file('AGENTS.md', '# Agent Instructions\n{{PROJECT_PURPOSE}}\n')
@@ -55,11 +94,13 @@ class AdoptionGuardTests(unittest.TestCase):
         self.file('.pi/prompts/bootstrap.md', 'Adapt this template kit\n')
         self.file('.pi/agents/bootstrap.md', '# Bootstrap role: set up a project, not its first feature\n')
         self.file('templates/project/README.md', '# {{PROJECT_NAME}}\n')
+        self.file('templates/project/bootstrap-record.md', '# {{PROJECT_NAME}}\n')
         result = self.guard()
         self.assertEqual(result.returncode, 1)
         for name in ('tests/test_template.py', 'tests/test_adoption.py',
                      '.pi/prompts/bootstrap.md',
-                     '.pi/agents/bootstrap.md', 'templates/project/README.md'):
+                     '.pi/agents/bootstrap.md', 'templates/project/README.md',
+                     'templates/project/bootstrap-record.md'):
             self.assertIn(name, result.stderr)
 
     def test_wholesale_optional_library_fails_but_selected_starter_passes(self):

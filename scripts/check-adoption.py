@@ -22,6 +22,7 @@ KIT_ONLY = (
     'tests/test_template.py',
     'tests/test_adoption.py',
     'templates/project/README.md',
+    'templates/project/bootstrap-record.md',
     'templates/ci/verify.yml.template',
     'template-guide',
 )
@@ -43,10 +44,62 @@ UNADAPTED_FRAGMENTS = {
     '.pi/agents/bootstrap.md': ('# Bootstrap role: set up a project, not its first feature',),
 }
 PLACEHOLDER = re.compile(r'\{\{[^{}\n]+\}\}')
+CHECKLIST = (
+    'Inspect target and selected template ref; preserve existing work.',
+    'Resolve blocking setup choices; record defaults and deferred product decisions.',
+    'Adapt all project authorities and .pi/README.md to the actual project.',
+    'Select useful Pi resources and scripts; omit kit-only content and local artifacts.',
+    'Configure honest validation and run available checks; list pending product phases.',
+    'Review final files, links and worktree; confirm no product implementation began.',
+)
+
+
+def check_record(root: Path) -> list[str]:
+    name = 'docs/bootstrap.md'
+    path = root / name
+    if not path.is_file():
+        return [f'{name}: missing bootstrap completion record']
+    try:
+        text = path.read_text(encoding='utf-8')
+    except (OSError, UnicodeError) as exc:
+        return [f'{name}: cannot read UTF-8 text: {exc}']
+    errors: list[str] = []
+    if PLACEHOLDER.search(text) or 'Copy as docs/bootstrap.md' in text:
+        errors.append(f'{name}: unfilled starter content')
+    if not re.search(r'(?m)^Template ref: \S.+$', text):
+        errors.append(f'{name}: missing selected HEAD or tag')
+    if not re.search(r'(?m)^Template revision used: [0-9a-f]{7,40}$', text):
+        errors.append(f'{name}: missing resolved template revision')
+    seen: set[str] = set()
+    for line in text.splitlines():
+        if not re.match(r'^\s*[-*]\s*\[', line):
+            continue
+        item = re.fullmatch(r'- \[([ xX])\] (B\d+) (.*?) — Evidence: (.*)', line)
+        if item is None:
+            errors.append(f'{name}: malformed checklist item: {line}')
+            continue
+        mark, identifier, label, evidence = item.groups()
+        if identifier in seen:
+            errors.append(f'{name}: duplicate task {identifier}')
+        seen.add(identifier)
+        if not identifier[1:].isdigit() or int(identifier[1:]) not in range(1, len(CHECKLIST) + 1):
+            errors.append(f'{name}: unexpected task {identifier}')
+            continue
+        if label != CHECKLIST[int(identifier[1:]) - 1]:
+            errors.append(f'{name}: changed task description {identifier}')
+        if mark != 'x':
+            errors.append(f'{name}: unchecked task {identifier}')
+        if len(evidence.strip()) < 10 or PLACEHOLDER.search(evidence) or evidence.strip().lower() in {'done', 'n/a', 'pending'}:
+            errors.append(f'{name}: missing concrete evidence for {identifier}')
+    for number in range(1, len(CHECKLIST) + 1):
+        if f'B{number}' not in seen:
+            errors.append(f'{name}: missing task B{number}')
+    return errors
 
 
 def check(root: Path) -> list[str]:
     errors: list[str] = []
+    errors.extend(check_record(root))
     for name in AUTHORITIES:
         path = root / name
         if not path.is_file():

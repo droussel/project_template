@@ -38,8 +38,9 @@ an unbuilt app. Those are questions for a separate design/implementation assignm
 
 Bootstrap sets up **project-specific** instructions, Pi prompts, toolchain choices
 and honest validation entry points. It rewrites the five authorities and .pi/README.md
-for the actual project, selects only useful resources, and omits kit-only tests and
-templates. **It does not implement the application, its UI, game loop, product tests
+for the actual project, selects only useful resources, omits kit-only tests and
+templates, and maintains a small `docs/bootstrap.md` completion record. **It does
+not implement the application, its UI, game loop, product tests
 or a demo to make checks green.** After reporting the setup result it stops;
 `/design` or `/implement` requires a new explicit request. Supplied defaults
 remain **300/500 physical source lines**, **80% ordinary / 90% critical per-layer
@@ -66,9 +67,14 @@ Keep this README in the template repository for subsequent bootstraps.
   `templates/project/`, inactive CI samples and wholesale optional libraries were
   not copied. Local/generated .pi files and private evidence are not accidentally
   staged.
+- `docs/bootstrap.md` contains B1–B6 checked **only when completed**, each with
+  concrete evidence. Unchecked or missing items block completion. Use the
+  [record starter](templates/project/bootstrap-record.md) to create it, not as a
+  kit-only template to leave in the target.
 - `python3 scripts/check-adoption.py` **passes in the target** after a manual
   file-by-file authority review, and the adopted check/verify wrappers call it as a
-  shared phase. This guard intentionally fails on the kit itself.
+  shared phase. The guard checks the record but cannot prove its claims are true.
+  It intentionally fails on the kit itself.
 - Checks for existing code/tooling are real and detect errors. Product-dependent
   phases not yet possible are named, remain nonzero/unconfigured, and identify what
   the first feature must wire before claiming product verification.
