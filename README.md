@@ -12,7 +12,7 @@ Start Pi in the **target** directory and give it an ordinary message:
 
 > This is a new project. Use my project template at <repository URL> to bootstrap
 > it. Read its README and `.pi/agents/bootstrap.md`; inspect this target first,
-> then ask me the required setup questions before making consequential choices.
+> then ask me one setup question at a time before making consequential choices.
 
 The one-sentence request with just the repository URL should also work: this README
 is the entry point when an agent inspects the template. The agent may fetch or clone
@@ -22,14 +22,14 @@ performing other unapproved side effects. You do not need `/bootstrap` in the ta
 before starting. A local `/bootstrap` prompt is included for use **after** the
 resources are available; it runs in the current session and is not an installer.
 
-The [bootstrap assignment](.pi/agents/bootstrap.md) contains the **fixed, numbered
-26-question catalogue**, each marked Required, Conditional or Optional. The agent
-should present it in one grouped form, prefilling verifiable facts as **proposed —
-confirm** and showing defaults. Required answers can be “none” or “agent may
-propose” where appropriate; undecided material choices become visible blockers, not
-invented facts. Questions cover scope, users, platform/stack, integration, UX,
-quality defaults, verification environments, Pi workflow, permissions and delivery.
-The operator can answer several at once. Optional questions need not delay work.
+The [bootstrap assignment](.pi/agents/bootstrap.md) contains a **fixed, numbered
+26-item checklist**, each marked Required, Conditional or Optional. It is **for the
+agent, not a questionnaire to dump into chat**: the agent asks exactly one relevant
+question per message, waits for your answer, and updates all checklist entries your
+answer resolves. It skips facts already known, inapplicable questions, and optional
+choices covered by defaults. Required means resolved before claiming completion,
+not necessarily asked aloud. Material unknowns remain visible blockers rather than
+invented facts. You can volunteer other preferences at any time.
 
 The agent then summarizes the proposed product/stack, files to preserve or create,
 policy exceptions and validation plan; settles material choices; adapts the project;

@@ -47,6 +47,14 @@ class DistributionTests(unittest.TestCase):
                             for _, label in rows))
         self.assertIn('300-line warning / 500-line ceiling', text)
         self.assertIn('80% ordinary / 90% critical', text)
+        self.assertIn('Ask exactly one question per message', text)
+        self.assertIn('Never paste the catalogue', text)
+        self.assertIn('not that it must become\nits own question', text)
+        self.assertIn('Do not ask for blanket acceptance of quality defaults', text)
+        prompt = (ROOT / '.pi/prompts/bootstrap.md').read_text(encoding='utf-8')
+        readme = (ROOT / 'README.md').read_text(encoding='utf-8')
+        self.assertIn('exactly\none relevant question per message', prompt)
+        self.assertIn('agent, not a questionnaire to dump into chat', readme)
 
     def test_local_markdown_links_resolve(self):
         for path in ROOT.rglob('*.md'):

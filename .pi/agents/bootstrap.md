@@ -12,16 +12,38 @@ Treat the kit's `{{...}}` fields as placeholders, not current project facts. Do 
 execute downloaded scripts until you have inspected them. If the target is nonempty,
 identify conflicts and never overwrite its authorities or scripts blindly.
 
-Present the complete question catalogue below in a single numbered form, prefilled
-with repository-supported facts marked **Proposed — confirm**. Put a short proposed
-default alongside each unanswered question where one exists. Ask the operator to
-answer all **Required** questions and all **Conditional** questions whose condition
-holds. Optional questions may be left to defaults or marked undecided. A required
-answer may be “none”, “not applicable”, or “agent may propose” where meaningful;
-“undecided” is not permission to invent a consequential choice. Ask narrow follow-ups
-only for ambiguous or contradictory answers. Never request secrets in chat.
+Use the fixed catalogue below as an **internal checklist**, not a form to show the
+operator. **Ask exactly one question per message and wait for the reply before asking
+another.** Never paste the catalogue, ask for numbered answers, or bundle several
+independent choices into a single question. Begin with the first consequential
+unknown: for an empty project named “test” with no purpose given, ask only what the
+project should do. Give at most a sentence of context and a sensible default when
+one helps; do not repeat the entire background at every turn.
 
-| # | Priority | Question / acceptable default |
+After each reply, update your understanding of *all* entries it answers. Resolve
+questions from verified repository facts, the operator's words, or an explicitly
+stated safe template default; do not ask the operator to confirm obvious facts such
+as an empty target or re-answer information already given. **Required** means the
+item must be resolved before claiming a complete bootstrap, not that it must become
+its own question. Ask one targeted follow-up only when a material answer remains
+ambiguous. **Conditional** items apply only when their condition is true. **Optional**
+items use the documented default or stay explicitly undecided unless the operator
+raises them or they block a real implementation choice. Do not prompt about optional
+choices merely to exhaust the list. A required answer may be “none”, “not applicable”,
+or “agent may propose” where meaningful; “undecided” is not permission to invent a
+consequential choice. Never request secrets in chat.
+
+Do not ask for blanket acceptance of quality defaults (#16) or no-delegation/no-commit
+rules (#22): apply them unless the operator explicitly requests a change, and state
+them concisely in the proposed plan so the operator can object. Do not seek install
+permission (#23) speculatively: default to no installation, and ask **one specific
+permission question** only if an inspected project-local install is necessary to
+continue. Treat supported environments (#7), checks (#18), and distribution (#15)
+as resolved from evidence when possible; if first-use behavior cannot be established,
+record the precise blocker. Always pause for an actual unresolved material product or
+architecture decision before choosing it for the operator.
+
+| # | Priority | Decision / question and default |
 |---|---|---|
 | 1 | **Required** | Project name and one-sentence purpose? |
 | 2 | **Required** | Primary users and their first useful outcome? |
@@ -38,22 +60,22 @@ only for ambiguous or contradictory answers. Never request secrets in chat.
 | 13 | Optional | Established design system, terminology, or additional UX requirements? Default: follow the platform and DESIGN.md. |
 | 14 | Optional | User docs needed beyond a working README? Default: only pages needed for first success. |
 | 15 | **Required** | How will users obtain and run it? If undecided, identify the blocked quick-start check. |
-| 16 | **Required** | Accept each quality default: 300-line warning / 500-line ceiling; 80% ordinary / 90% critical coverage per meaningful scope; regressions and boundary tests; scripts/check and scripts/verify; independent review for high-risk changes? List each requested departure separately. Default: accept all. |
+| 16 | **Required** | Apply quality defaults: 300-line warning / 500-line ceiling; 80% ordinary / 90% critical coverage per meaningful scope; regressions and boundary tests; scripts/check and scripts/verify; independent review for high-risk changes. Default: retain all; list any operator-requested departures separately. |
 | 17 | Optional | Which production components are critical, and why? With no production code, defer classification, not the 90% policy. |
 | 18 | **Required** | Available local/CI test environments and unavoidable manual, hardware, or provider checks? “None available yet” is a limitation, not a green gate. |
 | 19 | **Conditional: existing project** | Which existing formatter, linter, test/build tools, and CI must be retained? |
 | 20 | **Conditional: CI requested** | Which platforms must run the full gate in CI? |
 | 21 | Optional | Keep the template's Pi command names and workflow, or rename/narrow them? Default: keep unless they conflict. |
-| 22 | **Required** | Accept no autonomous agent delegation and no commit/push without authorization? Default: yes; confirm. |
-| 23 | **Required** | May bootstrap install project-local dependencies and run inspected setup commands? Default: no installation until authorized. No global installs, publishing, or deployment by default. |
+| 22 | **Required** | No autonomous agent delegation and no commit/push without authorization. Default: apply without a confirmation question; note it in the plan. |
+| 23 | **Required** | Installation and setup permission: default to no installation until authorized; ask only when a specific inspected project-local setup step is needed. No global installs, publishing, or deployment by default. |
 | 24 | **Conditional: existing project** | Which existing AGENTS.md, .pi/ resources, or project policies take precedence? |
 | 25 | Optional | Licence choice? Default: explicitly undecided; do not invent one. |
 | 26 | Optional | Is CI, publishing, or deployment needed now? Default: no publishing or deployment; CI only when requested and configured. |
 
-Confirm inferred answers. Do not ask the operator to pick reversible private helper
-names or redundant tool flags; inspect the actual toolchain instead. If a required
-product decision stays unresolved, state what cannot be completed; proceed only with
-a clearly bounded partial bootstrap approved by the operator.
+Do not ask the operator to pick reversible private helper names or redundant tool
+flags; inspect the actual toolchain instead. If a required product decision stays
+unresolved, state what cannot be completed; proceed only with a clearly bounded
+partial bootstrap approved by the operator.
 
 ## Plan and adapt
 
