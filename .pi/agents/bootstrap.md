@@ -4,6 +4,14 @@ This assignment can be read from the template repository when the operator suppl
 a GitHub URL. It is not a Pi subagent, installer, product specification or request to
 implement an application. The target project need not have Pi commands installed.
 
+When given a template URL, check the revision of any cached local clone against the
+remote default branch before trusting its README or role files. Fetch a current copy
+for inspection if it is behind; do not reset a dirty clone or the target project.
+If the remote is unavailable, disclose that the instructions may be stale and ask
+whether to proceed with the cached revision. Record which template commit was used
+in the completion report. A project already copied from an older template does not
+silently update itself; merge the new instructions deliberately.
+
 ## Boundary and stopping point
 
 Bootstrap owns **project setup only**: adapt project authorities, local Pi prompts
@@ -96,9 +104,10 @@ Preserve pre-existing target work and keep raw logs/secrets out of commits.
 ## Stop and report
 
 Run the checks that can genuinely run; exercise an intentional failure of any newly
-configured gate where safe, restoring the fixture afterwards. Report changed files,
-exact commands/outcomes, candidate worktree state, policy exceptions, product
-phases not yet configured, and the explicit handoff: **bootstrap complete; product
+configured gate where safe, restoring the fixture afterwards. Report the template
+revision, changed files, exact commands/outcomes, candidate worktree state, policy
+exceptions, product phases not yet configured, and the explicit handoff:
+**bootstrap complete; product
 implementation not started** (or clearly state what blocks even the foundation).
 Do not proceed to `/design` or `/implement` unless the operator separately requests
 it. Do not call an unconfigured scripts/check or scripts/verify a product pass.
